@@ -413,7 +413,7 @@ var Visualizer = class Visualizer {
         this.text("GPL", { x: 1, y: 5.5 });
         this.barGraph((Game.gpl.progress / Game.gpl.progressTotal), { x: 4.5, y: 5.5 });
         this.text("\u7B49\u7EA7:" + Game.gpl.level, { x: 13, y: 5.5 });
-        var i = 2.25;
+        var i = 1.25;
         for (var room in Game.rooms) {
             try {
                 if (Game.rooms[room].controller.my) {
@@ -421,7 +421,7 @@ var Visualizer = class Visualizer {
                     var rclProgress = Game.rooms[room].controller.progress;
                     var rclProgressTotal = Game.rooms[room].controller.progressTotal;
                     var level = Game.rooms[room].controller.level;
-                    if (Game.rooms[room].controller.level != 8) {
+                    if(Game.rooms[room].controller.level != 8) {
                         this.text(Game.rooms[room].name, { x: 1, y: (i + 5) });
                         this.barGraph((rclProgress / rclProgressTotal), { x: 4.5, y: (i + 5) });
                         if(Game.rooms[room].controller.ticksToDowngrade==CONTROLLER_DOWNGRADE[Game.rooms[room].controller.level]){
@@ -431,7 +431,7 @@ var Visualizer = class Visualizer {
                         }
                         this.text("" + (Game.rooms[room].controller.progressTotal - Game.rooms[room].controller.progress), { x: Game.rooms[room].controller.pos.x + 1, y: Game.rooms[room].controller.pos.y, roomName: room });
                     }
-                    else {
+                    else{
                         this.text(Game.rooms[room].name, { x: 1, y: (i + 5) });
                         this.barGraph(Game.rooms[room].controller.ticksToDowngrade/CONTROLLER_DOWNGRADE[Game.rooms[room].controller.level], { x: 4.5, y: (i + 5) });
                         //this.text("\u7B49\u7EA7:" + level, { x: 13, y: (i + 5) });

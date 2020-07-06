@@ -3,38 +3,21 @@
 author：Tracer
 version:1.0
 
-矿机自动化：
-功能：新老矿机自动交替，矿机位置自动建造container，矿机自动寻找周围一格内的link并填充
+将旗插到外矿采矿位上，可以自动根据距离判断主房。
 
-使用方法：
-1、在energy临近一格的位置插上旗，旗的两个颜色要都是黄色。
-2、该房间内有自己的spawn，该代码不适用于外矿
-2、（非必须）在旗子附近一格内建造link，矿机会自动填充link，以及从container里面取能量填充到link。
-
-代码部分如下
-
-var SourceKeeperCtrl = require('SourceKeeperCtrl')
-
-module.exports.loop = function () {
-    SourceKeeperCtrl.run();
-
-    //your code
-
-}
+旗帜命名要求：
+如果希望自动寻找，请命名为 "outpost_"+不重复id
+如果想要手动指定，请命名为 房号+"_outpost_"+不重复id
 
 ***************************************************/
 
-//该部分代码主要实现新老creep交替，用命名来区分，后缀分别为0或1
-
 const needContainer = true;
-const needToSaveCpu = false;//可以生产10WORK的creep快速挖矿，然后休息，用能量换CPU的方法
-const usdCreepMove_Yuan = false;//如果你使用了Yuandiaodiaodiao所写的对穿，那么可以把这个设置为true，要不然新老creep交替会鬼畜
 
 function flagRun(flag){
     
     let home=flag.memory.home;
     if(!home){
-        if(flag.name.indexOf('_outpost_')==0){
+        if(flag.name.indexOf('outpost_')==0){
             home=getClosestRoom(flag.pos.roomName);
             flag.memory.home=home;
         }else{
@@ -52,7 +35,7 @@ function flagRun(flag){
     }
     const miner0 = Game.creeps[flag.name + '_worker_0'];
     const miner1 = Game.creeps[flag.name + '_worker_1'];
-    let dyingTick = flag.memory.pathtime;//其中一个寿命不足50就生产另一个，常数可以调整，也可以不用常数
+    let dyingTick = flag.memory.pathtime;
     var needToSpawnName = null;
     if(!miner0 && !miner1){
         needToSpawnName = flag.name + '_worker_1';
@@ -115,7 +98,7 @@ function flagRun(flag){
     }
     if(porter1){
         Transporter(porter1,flag)
-        console.log(porter1.ticksToLive,dyingTick)
+        // console.log(porter1.ticksToLive,dyingTick)
         if(!porter0 & porter1.ticksToLive <= dyingTick){
             needToSpawnName = flag.name + '_porter_0';
         }

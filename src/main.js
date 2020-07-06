@@ -157,7 +157,7 @@ module.exports.loop = function () {
                 body=body.concat(conf.body(roomName));
                 cost+=conf.cost(roomName);
             }
-            console.log(k)
+            // console.log(k)
             let workpos;
             if(!conf.workpos){
                 workpos=new RoomPosition(25,25,roomName);
