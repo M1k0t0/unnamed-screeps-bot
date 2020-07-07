@@ -12,6 +12,7 @@ version:1.0
 ***************************************************/
 
 const needToSaveCpu = false;
+const usdCreepMove_Yuan = true;
 const needContainer = true;
 
 function flagRun(flag){
