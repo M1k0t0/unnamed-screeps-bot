@@ -11,6 +11,7 @@ version:1.0
 
 ***************************************************/
 
+const needToSaveCpu = false;
 const needContainer = true;
 
 function flagRun(flag){
