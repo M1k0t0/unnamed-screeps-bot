@@ -213,7 +213,7 @@ module.exports.loop = function () {
             let jump=false;
             for(let s in roomPlan){
                 limit=CONTROLLER_STRUCTURES[s][rcl];
-                let pos_list=translater(spawn0.pos,roomPlan[s],startPos[s][0],startPos[s][1],limit,s);
+                let pos_list=global.translater(spawn0.pos,roomPlan[s],startPos[s][0],startPos[s][1],limit,s);
                 if(!Memory.rooms[roomName].build){
                     if(room.controller.level>=6){
                         let mineral=room.find(FIND_MINERALS);
