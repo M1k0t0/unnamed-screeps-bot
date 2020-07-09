@@ -208,14 +208,14 @@ global.spawn_conf={
             if(Game.rooms[roomName].controller && Game.rooms[roomName].controller.ticksToDowngrade<CONTROLLER_DOWNGRADE[Game.rooms[roomName].controller.level]/5){
                 return true;
             }
-            if(Game.rooms[roomName].controller && Game.rooms[roomName].controller.level<3){
+            if(Game.rooms[roomName].controller && Game.rooms[roomName].controller.level<=3){
                 if(!Memory.rooms[roomName]['creep_num']){
                     return false;
                 }
                 return Game.rooms[roomName].energyAvailable>=300; 
             }
             if(Game.rooms[roomName].storage){
-                return Game.rooms[roomName].energyAvailable>=Game.rooms[roomName].energyCapacityAvailable*0.5 && room.storage.store.energy>50000;
+                return Game.rooms[roomName].energyAvailable>=Game.rooms[roomName].energyCapacityAvailable*0.5 && Game.rooms[roomName].storage.store.energy>50000;
             }
             return Game.rooms[roomName].energyAvailable>=Game.rooms[roomName].energyCapacityAvailable*0.8;
         },
