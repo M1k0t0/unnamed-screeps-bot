@@ -24,6 +24,9 @@ module.exports = {
         let output=['out','both'];
         var mem=Memory.rooms[roomName].links;
         let needStorage=true;
+        
+        if(room.controller && room.controller.level<5) return;
+        
         for(let type of output){
             for(let linkID of mem[type]){
                 let link=Game.getObjectById(linkID);

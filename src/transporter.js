@@ -84,31 +84,33 @@ var Transporter = {
                     creep.suicide();
                 }
             }
-            for(let linkID of Memory.rooms[creep.room.name].links.in){
-                let link=Game.getObjectById(linkID);
-                if(link && link.store.energy){
-                    if(creep.withdraw(link,RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                        creep.moveTo(link);
-                    }else{
-                        if(creep.store.energy+link.store.energy>=creep.store.getCapacity()*0.8){
-                            creep.memory.Transfer=true;
+            if(creep.room.controller && creep.room.controller.level>4){
+                for(let linkID of Memory.rooms[creep.room.name].links.in){
+                    let link=Game.getObjectById(linkID);
+                    if(link && link.store.energy){
+                        if(creep.withdraw(link,RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                            creep.moveTo(link);
+                        }else{
+                            if(creep.store.energy+link.store.energy>=creep.store.getCapacity()*0.8){
+                                creep.memory.Transfer=true;
+                            }
                         }
+                        return;
                     }
-                    return;
                 }
-            }
-            for(let linkID of Memory.rooms[creep.room.name].links.both){
-                //console.log(linkID);
-                let link=Game.getObjectById(linkID);
-                if(link && link.store.energy){
-                    if(creep.withdraw(link,RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                        creep.moveTo(link);
-                    }else{
-                        if(creep.store.energy+link.store.energy>=creep.store.getCapacity()*0.8){
-                            creep.memory.Transfer=true;
+                for(let linkID of Memory.rooms[creep.room.name].links.both){
+                    //console.log(linkID);
+                    let link=Game.getObjectById(linkID);
+                    if(link && link.store.energy){
+                        if(creep.withdraw(link,RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                            creep.moveTo(link);
+                        }else{
+                            if(creep.store.energy+link.store.energy>=creep.store.getCapacity()*0.8){
+                                creep.memory.Transfer=true;
+                            }
                         }
+                        return;
                     }
-                    return;
                 }
             }
             const target = creep.pos.findClosestByRange(FIND_STRUCTURES, {

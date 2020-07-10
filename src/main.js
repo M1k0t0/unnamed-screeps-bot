@@ -28,9 +28,13 @@ require('init');
 
 module.exports.loop = function () {
     
+    console.log('-----------------------------------------------------');
+    
     global.towerTarget = {};
     
     let rooms_list=["YOUR-ROOM-NAME"];
+    
+    let cpuStartTime=Game.cpu.getUsed();
     
     for(var name in Memory.creeps) {
         let creep=Game.creeps[name];
@@ -64,6 +68,7 @@ module.exports.loop = function () {
             if(creep.memory.role=='transporter') global.transporter.run(creep);
             if(creep.memory.role=='builder') global.builder.run(creep);
             if(creep.memory.role=='upgrader') global.upgrader.run(creep);
+            if(creep.memory.role=='attacker') global.attacker.run(creep);
             
             /*
             catch(err){
@@ -72,6 +77,10 @@ module.exports.loop = function () {
             */
         }
     }
+    
+    console.log('Creeps code CPU cost:'+(Game.cpu.getUsed() - cpuStartTime));
+    
+    cpuStartTime=Game.cpu.getUsed();
     
     for(let roomName of rooms_list){
         if(Memory['rooms'][roomName]==undefined){
@@ -356,6 +365,10 @@ module.exports.loop = function () {
         
     }
     
+    console.log('Rooms code CPU cost:' + (Game.cpu.getUsed() - cpuStartTime));
+    
+    cpuStartTime=Game.cpu.getUsed();
+    
     for(let flagName in Game.flags){
         let flag=Game.flags[flagName];
         let roomName=flag.pos.roomName;
@@ -431,6 +444,10 @@ module.exports.loop = function () {
             }
         }
     }
-
+    
+    console.log('Flags code CPU cost:' + (Game.cpu.getUsed() - cpuStartTime));
+    
+    console.log('-----------------------------------------------------');
+    
     global.Visualizer.visuals();
 }
