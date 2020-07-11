@@ -17,6 +17,12 @@ var roleUpgrader = {
         }
         if(!creep.memory.Transfer){
             creep.memory.no_pull=false;
+            
+            if(creep.store.energy>=creep.store.getCapacity()*0.85){
+                creep.memory.Transfer=true;
+                creep.moveTo(creep.room.controller);
+            }
+            
             creep.say('W:'+creep.store.energy);
             const target = creep.pos.findClosestByRange(FIND_DROPPED_RESOURCES,{
                 filter:(r)=>{
@@ -65,10 +71,6 @@ var roleUpgrader = {
                         }
                     }
                 }
-            }
-            if(creep.store.energy>=creep.store.getCapacity()*0.85){
-                creep.memory.Transfer=true;
-                creep.moveTo(creep.room.controller);
             }
         }
 	}
