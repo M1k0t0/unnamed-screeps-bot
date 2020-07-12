@@ -68,7 +68,6 @@ module.exports.loop = function () {
             if(creep.memory.role=='transporter') global.transporter.run(creep);
             if(creep.memory.role=='builder') global.builder.run(creep);
             if(creep.memory.role=='upgrader') global.upgrader.run(creep);
-            if(creep.memory.role=='attacker') global.attacker.run(creep);
             
             /*
             catch(err){
@@ -112,7 +111,7 @@ module.exports.loop = function () {
             }
             if(Game.time % 5 == 4 && room.find(FIND_HOSTILE_CREEPS,{
                 filter: (hc)=>{
-                    return hc.owner.id!=2 && hc.pos.inRangeTo(spawn0,5) && (hc.getActiveBodyparts(ATTACK) || hc.getActiveBodyparts(RANGED_ATTACK) || hc.getActiveBodyparts(WORK));
+                    return hc.owner.username!="Invader" && hc.pos.inRangeTo(spawn0,5) && (hc.getActiveBodyparts(ATTACK) || hc.getActiveBodyparts(RANGED_ATTACK) || hc.getActiveBodyparts(WORK));
                 }
             }).length) room.controller.activateSafeMode();
         }
@@ -200,7 +199,7 @@ module.exports.loop = function () {
         }
         
         CONTROLLER_STRUCTURES['road']=[0,0,0,12,19,30,46,255,255];
-        if(spawn0.pos.getRangeTo && spawn0.pos.getRangeTo(controller)>17){
+        if(spawn0 && spawn0.pos.getRangeTo(controller)>17){
             CONTROLLER_STRUCTURES['link']=[0,0,0,0,0,0,0,1,4];
         }else{
             CONTROLLER_STRUCTURES['link']=[0,0,0,0,0,0,1,1,4];
