@@ -7,32 +7,8 @@ var Transporter = {
         }
         if(creep.isEmpty){
             creep.memory.Transfer=false;
-        }
-        else if(creep.isFull){
+        }else if(creep.isFull){
             creep.memory.Transfer=true;
-        }
-        if(otherThings){
-            const storage = creep.room.storage;
-            if(storage){
-                if(storeAll<storage.store.getFreeCapacity()){
-                    for(let r of creep.storeList){
-                        if(creep.transfer(storage, r) == ERR_NOT_IN_RANGE) {
-                            if(Game.time % 2){
-                                creep.say('T: '+r);
-                            }else{
-                                creep.say('Amount: '+creep.store[r]);
-                            }
-                            creep.moveTo(storage);
-                        }
-                    }
-                    return;
-                }
-            }
-            // pushTask(creep.room.name,'storage','terminal','energy',30000);
-            for(let r of creep.storeList){
-                creep.drop(r);
-            }
-            creep.memory.no_pull=false;
         }
         
         if(!creep.memory.Transfer) {
@@ -87,6 +63,7 @@ var Transporter = {
             if(creep.room.controller && creep.room.controller.level>4){
                 for(let linkID of Memory.rooms[creep.room.name].links.in){
                     let link=Game.getObjectById(linkID);
+                    if(!link.pos.inRangeTo(creep.room.center,5)) continue;   // max range 17
                     if(link && link.store.energy){
                         if(creep.withdraw(link,RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                             creep.moveTo(link);
@@ -178,7 +155,31 @@ var Transporter = {
             
         }
         if(creep.memory.Transfer) {
-            //console.log(creep.name)
+            
+            if(otherThings){
+                const storage = creep.room.storage;
+                if(storage){
+                    if(storeAll<storage.store.getFreeCapacity()){
+                        for(let r of creep.storeList){
+                            if(creep.transfer(storage, r) == ERR_NOT_IN_RANGE) {
+                                if(Game.time % 2){
+                                    creep.say('T: '+r);
+                                }else{
+                                    creep.say('Amount: '+creep.store[r]);
+                                }
+                                creep.moveTo(storage);
+                            }
+                        }
+                    }
+                }
+                // pushTask(creep.room.name,'storage','terminal','energy',30000);
+                for(let r of creep.storeList){
+                    creep.drop(r);
+                }
+                
+                return;
+            }
+            
             creep.say('T:'+creep.store.energy);
             
             if(Memory.rooms[creep.room.name].invade){
