@@ -200,7 +200,7 @@ global.spawn_conf={
         'limit':(roomName)=>{ 
             let rcltl=[0,6,6,6,4,3,5,4,1];
             if(Game.rooms[roomName].storage && Game.rooms[roomName].storage.store.energy>200000 && Game.rooms[roomName].controller.level<8 && Game.rooms[roomName].controller.level>0){
-                return rcltl[Game.rooms[roomName].controller.level]+(Game.rooms[roomName].storage.store.energy % 100000);
+                return rcltl[Game.rooms[roomName].controller.level]+Math.ceil(Game.rooms[roomName].storage.store.energy / 100000);
             }
             return rcltl[Game.rooms[roomName].controller.level];
         },
