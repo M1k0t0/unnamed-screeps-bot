@@ -350,6 +350,7 @@ function Transporter (creep,flag){
         creep.memory.Transfer=true;
     }
     if(flag.memory.invade+flag.memory.wait>Game.time || creep.room.find(FIND_HOSTILE_CREEPS).length && (creep.room.controller && !creep.room.controller.my)){
+        creep.memory.suicide=true;
         creep.memory.Transfer=true;
     }
     let r=creep.pos.lookFor(LOOK_RESOURCES);
@@ -401,6 +402,12 @@ function Transporter (creep,flag){
                     creep.pickup(dtarget[0]);
                 }
             }
+        }
+    }
+    if(creep.memory.suicide){
+        if(creep.isEmpty){
+            creep.suicide();
+            return;
         }
     }
     if(creep.memory.Transfer){
