@@ -65,9 +65,10 @@ var Transporter = {
                     let link=Game.getObjectById(linkID);
                     if(!link.pos.inRangeTo(creep.room.center,5)) continue;   // max range 17
                     if(link && link.store.energy){
-                        if(creep.withdraw(link,RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                        let state=creep.withdraw(link,RESOURCE_ENERGY);
+                        if(state == ERR_NOT_IN_RANGE) {
                             creep.moveTo(link);
-                        }else{
+                        }else if(state == OK){
                             if(creep.store.energy+link.store.energy>=creep.store.getCapacity()*0.8){
                                 creep.memory.Transfer=true;
                             }
@@ -79,9 +80,10 @@ var Transporter = {
                     //console.log(linkID);
                     let link=Game.getObjectById(linkID);
                     if(link && link.store.energy){
-                        if(creep.withdraw(link,RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                        let state=creep.withdraw(link,RESOURCE_ENERGY);
+                        if(state == ERR_NOT_IN_RANGE) {
                             creep.moveTo(link);
-                        }else{
+                        }else if(state == OK){
                             if(creep.store.energy+link.store.energy>=creep.store.getCapacity()*0.8){
                                 creep.memory.Transfer=true;
                             }
@@ -106,14 +108,15 @@ var Transporter = {
                 }else{
                     if(creep.room.controller.level>=4){
                         if(creep.room.storage && creep.room.storage.store.getFreeCapacity()){
-                            const dtarget = creep.pos.findInRange(FIND_DROPPED_RESOURCES,1);
+                            const dtarget = creep.pos.findInRange(FIND_DROPPED_RESOURCES,6);
                             if(dtarget.length) {
                                 //console.log(1)
                                 //creep.memory.no_pull=true;
-                                if(dtarget[0].store.energy>=creep.store.getFreeCapacity()){
+                                let state=creep.pickup(dtarget[0]);
+                                
+                                if(state == OK && dtarget[0].store.energy>=creep.store.getFreeCapacity()){
                                     creep.memory.Transfer=true;
                                 }
-                                creep.pickup(dtarget[0]);
                             }
                         }
                     }else{
@@ -121,25 +124,28 @@ var Transporter = {
                         if(dtarget.length) {
                             //console.log(1)
                             //creep.memory.no_pull=true;
-                            if(dtarget[0].store.energy>=creep.store.getFreeCapacity()){
+                            let state=creep.pickup(dtarget[0]);
+                                
+                            if(state == OK && dtarget[0].store.energy>=creep.store.getFreeCapacity()){
                                 creep.memory.Transfer=true;
                             }
-                            creep.pickup(dtarget[0]);
                         }
                     }
                 }
             }else{
                 const target=creep.room.storage;
                 if(target&&target.store.energy){
-    
-                    if(target.store.energy>=creep.store.getFreeCapacity()){
-                        creep.memory.Transfer=true;
-                    }
-                    if(creep.withdraw(target,RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                    
+                    let state = creep.withdraw(target,RESOURCE_ENERGY);
+                    
+                    if(state == ERR_NOT_IN_RANGE) {
                         creep.moveTo(target);
+                    }else if(state == OK){
+                        if(target.store.energy>=creep.store.getFreeCapacity()){
+                            creep.memory.Transfer=true;
+                        }
                     }
-                
-    
+                    
                 }else{
                     const target=creep.room.terminal;
                     if(target&&target.store.energy>40000){
