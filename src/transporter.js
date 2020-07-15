@@ -63,7 +63,7 @@ var Transporter = {
             if(creep.room.controller && creep.room.controller.level>4){
                 for(let linkID of Memory.rooms[creep.room.name].links.in){
                     let link=Game.getObjectById(linkID);
-                    if(!link.pos.inRangeTo(creep.room.center,5)) continue;   // max range 17
+                    if(!link.pos.inRangeTo(creep.room.center,6)) continue;   // max range 17
                     if(link && link.store.energy){
                         let state=creep.withdraw(link,RESOURCE_ENERGY);
                         if(state == ERR_NOT_IN_RANGE) {
