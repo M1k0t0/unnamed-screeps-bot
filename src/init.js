@@ -128,27 +128,6 @@ global.startPos={
     'road':[6,8]
 };
 
-let tmpObj={
-    SourceKeeperCtrl:require('SourceKeeperCtrl'),
-    OutPostCtrl:require('OutPostCtrl'),
-    LinkManager:require('linkManager'),
-    TowerCtrl:require('TowerCtrl'),
-    centerTransfer:require('centerTransfer'),
-    Visualizer:require('Visualizer'),
-    transporter:require('transporter'),
-    builder:require('builder'),
-    upgrader:require('upgrader'),
-    attacker:require('attacker')
-};
-Object.assign(global,tmpObj);
-
-// global.SourceKeeperCtrl = require('SourceKeeperCtrl');
-// global.OutPostCtrl = require('OutPostCtrl');
-// global.transporter = require('transporter');
-// global.builder = require('builder');
-// global.upgrader = require('upgrader');
-// global.Visualizer = require('Visualizer');
-
 global.spawn_conf={
     'transporter':{
         'role':'transporter',
@@ -429,6 +408,20 @@ global.newTask = function(roomName,from,to,resourceType,amount,ns=false){
         return '已存在.';
     }
 }
+
+let tmpObj={
+    SourceKeeperCtrl:require('SourceKeeperCtrl'),
+    OutPostCtrl:require('OutPostCtrl'),
+    LinkManager:require('linkManager'),
+    TowerCtrl:require('TowerCtrl'),
+    centerTransfer:require('centerTransfer'),
+    Visualizer:require('Visualizer'),
+    transporter:require('transporter'),
+    builder:require('builder'),
+    upgrader:require('upgrader'),
+    attacker:require('attacker')
+};
+Object.assign(global,tmpObj);
 
 if(Memory['rooms']==undefined){
     Memory['rooms']={};

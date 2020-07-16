@@ -141,8 +141,6 @@ module.exports.loop = function () {
             })
         }
 
-        let spawn_conf=spawn_conf;
-
         for(let k in spawn_conf){
             // console.log(k)
             let conf=spawn_conf[k];
