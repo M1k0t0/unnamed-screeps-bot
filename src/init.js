@@ -5,19 +5,19 @@ require('prototypes');
 
 global.roomPlan={
     'extension':[
-      [61,-1,-1,56,-1,-1, 60, -1,-1,55,-1,  -1,62],
-      [-1,32,31,-1,28,27 ,-1,23,22,-1,18,  17,-1],
-      [-1,33,-1,30,29,-1,-1,  -1,21,20,-1, 16,-1],
-      [57,-1,35,34,-1,26,25,24,-1,19, 15, -1,59],
-      [-1,37,36,-1, -1,-1,-1,-1, -1, -1, 14, 13,-1],
-      [-1,38,-1 ,39,-1,-1,-1,-1, -1,  0,  -1,  3, -1],
-      [53, -1,-1, 40,-1,-1,-1,-1, -1,  1,  -1,-1,54],
-      [-1,42,-1, 41,-1,-1,-1,-1, -1,  2,  -1,  4,-1],
-      [-1,43,44, -1,-1,-1,-1,-1, -1, -1,   6,  5,-1],
-      [58,-1,45, 49,-1,-1,-1,-1, -1,  8,   7, -1,60],
-      [-1,46,-1, 50,-1,-1,-1,-1, -1,  9,  -1,10,-1],
-      [-1,47,48, -1,-1,-1, -1,-1,-1, -1,  12,11,-1],
-      [63,-1 ,-1,51, -1,-1,65,-1, -1,52, -1, -1,64]
+      [61,-1,-1,56,-1,-1,60,-1,-1,55,-1,-1,62],
+      [-1,32,31,-1,28,27,-1,23,22,-1,18,17,-1],
+      [-1,33,-1,30,29,-1,-1,-1,21,20,-1,16,-1],
+      [57,-1,35,34,-1,26,25,24,-1,19,15,-1,59],
+      [-1,37,36,-1,-1,-1,-1,-1,-1,-1,14,13,-1],
+      [-1,38,-1,39,-1,-1,-1,-1,-1, 0,-1, 3,-1],
+      [53,-1,-1,40,-1,-1,-1,-1,-1, 1,-1,-1,54],
+      [-1,42,-1,41,-1,-1,-1,-1,-1, 2,-1, 4,-1],
+      [-1,43,44,-1,-1,-1,-1,-1,-1,-1, 6, 5,-1],
+      [58,-1,45,49,-1,-1,-1,-1,-1, 8, 7,-1,60],
+      [-1,46,-1,50,-1,-1,-1,-1,-1, 9,-1,10,-1],
+      [-1,47,48,-1,-1,-1,-1,-1,-1,-1,12,11,-1],
+      [63,-1,-1,51,-1,-1,65,-1,-1,52,-1,-1,64]
     ],
     'lab':[
       [-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],
@@ -133,12 +133,14 @@ let tmpObj={
     OutPostCtrl:require('OutPostCtrl'),
     LinkManager:require('linkManager'),
     TowerCtrl:require('TowerCtrl'),
+    centerTransfer:require('centerTransfer'),
     Visualizer:require('Visualizer'),
     transporter:require('transporter'),
     builder:require('builder'),
-    upgrader:require('upgrader')
+    upgrader:require('upgrader'),
+    attacker:require('attacker')
 };
-global=Object.assign(tmpObj,global);
+Object.assign(global,tmpObj);
 
 // global.SourceKeeperCtrl = require('SourceKeeperCtrl');
 // global.OutPostCtrl = require('OutPostCtrl');
@@ -379,6 +381,53 @@ global.clearCS = function(){
 }
 global.placeByList = function(r,l,t){
     for(let i of l) Game.rooms[r].createConstructionSite(i[0],i[1],t);
+}
+global.newTask = function(roomName,from,to,resourceType,amount,ns=false){
+    if(!roomName){
+        return undefined;
+    }
+    if(from=='storage'){
+        from=Game.rooms[roomName].storage.id;
+    }else if(from=='terminal'){
+        from=Game.rooms[roomName].terminal.id;
+    }else if(from=='factory'){
+        from=Game.rooms[roomName].factory.id;
+    }
+    
+    if(to=='terminal'){
+        to=Game.rooms[roomName].terminal.id;
+    }else if(to=='storage'){
+        to=Game.rooms[roomName].storage.id;
+    }else if(to=='factory'){
+        to=Game.rooms[roomName].factory.id;
+    }
+    if(!from || !to || !resourceType){
+        return undefined;
+    }
+    if(resourceType=='all'){
+        let n=0;
+        for(let r in Game.getObjectById(from).store){
+            let a=Game.getObjectById(from).store[r];
+            if(a){
+                n++;
+                if(Memory.tasks[roomName][0].indexOf('Custom    F:'+from+'T:'+to+'R:'+r)==-1){
+                    Memory.tasks[roomName][0].push('Custom    F:'+from+'T:'+to+'R:'+r);
+                    Memory.tasks[roomName][1]['Custom    F:'+from+'T:'+to+'R:'+r]={ns:ns,from:from,to:to,resourceType:r,amount:a,id:'Custom    F:'+from+'T:'+to+'R:'+r};
+                }
+            }
+        }
+        return 'Successfully add '+n+' tasks';
+    }else if(!amount){
+        return undefined;
+    }
+    if(Memory.tasks[roomName][0].indexOf('Custom    F:'+from+'T:'+to+'R:'+resourceType)==-1){
+        Memory.tasks[roomName][0].push('Custom    F:'+from+'T:'+to+'R:'+resourceType);
+        Memory.tasks[roomName][1]['Custom    F:'+from+'T:'+to+'R:'+resourceType]={from:from,to:to,resourceType:resourceType,amount:amount,id:'Custom    F:'+from+'T:'+to+'R:'+resourceType};
+        return JSON.stringify(Memory.tasks[roomName][1]);
+        return 'Success!';
+    }else{
+        return '已存在.';
+    }
 }
 
 if(Memory['rooms']==undefined){

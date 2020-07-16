@@ -32,7 +32,7 @@ module.exports.loop = function () {
     
     global.towerTarget = {};
     
-    let rooms_list=["YOUR-ROOM-NAME"];
+    let rooms_list=['E19N48'];
     
     let cpuStartTime=Game.cpu.getUsed();
     
@@ -65,9 +65,10 @@ module.exports.loop = function () {
                 }
             }
             
-            if(creep.memory.role=='transporter') global.transporter.run(creep);
-            if(creep.memory.role=='builder') global.builder.run(creep);
-            if(creep.memory.role=='upgrader') global.upgrader.run(creep);
+            if(creep.memory.role=='transporter') transporter.run(creep);
+            if(creep.memory.role=='builder') builder.run(creep);
+            if(creep.memory.role=='upgrader') upgrader.run(creep);
+            if(creep.memory.role=='attacker') attacker.run(creep);
             
             /*
             catch(err){
@@ -140,7 +141,7 @@ module.exports.loop = function () {
             })
         }
 
-        let spawn_conf=global.spawn_conf;
+        let spawn_conf=spawn_conf;
 
         for(let k in spawn_conf){
             // console.log(k)
@@ -221,7 +222,7 @@ module.exports.loop = function () {
             let jump=false;
             for(let s in roomPlan){
                 limit=CONTROLLER_STRUCTURES[s][rcl];
-                let pos_list=global.translater(spawn0.pos,roomPlan[s],startPos[s][0],startPos[s][1],limit,s);
+                let pos_list=translater(spawn0.pos,roomPlan[s],startPos[s][0],startPos[s][1],limit,s);
                 if(!Memory.rooms[roomName].build){
                     if(room.controller.level>=6){
                         let mineral=room.find(FIND_MINERALS);
@@ -346,7 +347,7 @@ module.exports.loop = function () {
         
         
         for(let tower of room.tower){
-            if(tower) global.TowerCtrl.run(tower);
+            if(tower) TowerCtrl.run(tower);
         }
         
         if(!Memory.rooms[roomName].links.both.length){
@@ -358,7 +359,7 @@ module.exports.loop = function () {
             }
         }
         
-        global.LinkManager.run(roomName);
+        LinkManager.run(roomName);
         
         Memory.rooms[roomName].creep_num=undefined;
         
@@ -375,10 +376,10 @@ module.exports.loop = function () {
             flag.setColor(COLOR_YELLOW,COLOR_YELLOW);
         }
         if(flag.color == COLOR_YELLOW && flag.secondaryColor == COLOR_YELLOW){
-            global.SourceKeeperCtrl.run(flag);
+            SourceKeeperCtrl.run(flag);
         }
         if(flag.name.indexOf('_outpost_')!=-1){
-            global.OutPostCtrl.run(flag);
+            OutPostCtrl.run(flag);
             
             let home=flag.memory.home;
             
@@ -448,5 +449,7 @@ module.exports.loop = function () {
     
     console.log('-----------------------------------------------------');
     
-    global.Visualizer.visuals();
+    centerTransfer.run();
+    
+    Visualizer.visuals();
 }

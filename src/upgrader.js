@@ -50,23 +50,23 @@ var roleUpgrader = {
                         creep.moveTo(target);
                     }
                 }else{
-                    // if(creep.room.controller && creep.room.controller.level>4){
-                    //     for(let linkID of Memory.rooms[creep.room.name].links.in){
-                    //         let link=Game.getObjectById(linkID);
-                    //         if(link.pos.inRangeTo(creep.room.center,4)) continue;   // max range 6
-                    //         if(link && link.store.energy){
-                    //             let state=creep.withdraw(link,RESOURCE_ENERGY);
-                    //             if(state == ERR_NOT_IN_RANGE) {
-                    //                 creep.moveTo(link);
-                    //             }else if(state == OK){
-                    //                 if(creep.store.energy+link.store.energy>=creep.store.getCapacity()*0.8){
-                    //                     creep.memory.Transfer=true;
-                    //                 }
-                    //             }
-                    //             return;
-                    //         }
-                    //     }
-                    // }
+                    if(creep.room.controller && creep.room.controller.level>4){
+                        for(let linkID of Memory.rooms[creep.room.name].links.in){
+                            let link=Game.getObjectById(linkID);
+                            if(link.pos.inRangeTo(creep.room.center,4)) continue;   // max range 6
+                            if(link && link.store.energy){
+                                let state=creep.withdraw(link,RESOURCE_ENERGY);
+                                if(state == ERR_NOT_IN_RANGE) {
+                                    creep.moveTo(link);
+                                }else if(state == OK){
+                                    if(creep.store.energy+link.store.energy>=creep.store.getCapacity()*0.8){
+                                        creep.memory.Transfer=true;
+                                    }
+                                }
+                                return;
+                            }
+                        }
+                    }
                     const storage = creep.room.storage;
                     if(storage && storage.store.energy>25000){
                         if(creep.withdraw(storage,RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
