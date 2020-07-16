@@ -11,6 +11,11 @@ var Transporter = {
             creep.memory.Transfer=true;
         }
         
+        if(creep.memory.sleep){
+            creep.memory.sleep--;
+            return;
+        }
+        
         if(!creep.memory.Transfer) {
             creep.say('W:'+creep.store.energy);
             if(creep.ticksToLive<=2){
@@ -24,7 +29,7 @@ var Transporter = {
                         if(creep.room.controller && creep.room.controller.level<3){
                             return (r.store.energy>150 || r.store.energy>=creep.store.getFreeCapacity(r.resourceType)) && r.pos.inRangeTo(creep,20);
                         }
-                        return (r.store.getUsedCapacity()>300 || r.store.getUsedCapacity()-r.store.getUsedCapacity('energy')>150) && r.pos.inRangeTo(new RoomPosition(Memory.rooms[creep.room.name].core[0],Memory.rooms[creep.room.name].core[1],creep.room.name),20);
+                        return (r.store.getUsedCapacity()>=300 || r.store.getUsedCapacity()-r.store.getUsedCapacity('energy')>150) && r.pos.inRangeTo(new RoomPosition(Memory.rooms[creep.room.name].core[0],Memory.rooms[creep.room.name].core[1],creep.room.name),20);
                     }
                 });
                 if(tombstone) {
@@ -343,6 +348,8 @@ var Transporter = {
                                     let state=creep.transfer(link,RESOURCE_ENERGY);
                                     if(state == ERR_NOT_IN_RANGE) {
                                         creep.moveTo(link);
+                                    }else if(state == OK){
+                                        creep.memory.sleep=4;
                                     }
                                     return;
                                 }

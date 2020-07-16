@@ -23,7 +23,7 @@ module.exports = {
         let input=['in','both'];
         let output=['out','both'];
         var mem=Memory.rooms[roomName].links;
-        let needStorage=true;
+        // let needStorage=true;
         let breakFlag=false;
         
         if(room.controller && room.controller.level<5) return;
@@ -38,8 +38,8 @@ module.exports = {
                     console.log('[LinkManager] '+linkID+'已被破坏,正在丢出列表...');
                     continue;
                 }
-                if((type=='out' || (!needStorage && type=='both')) && link.store.energy>200){
-                    needStorage=false;
+                if((type=='out' || type=='both') && link.store.energy>200){
+                    // needStorage=false;
                     for(let type2 of input){
                         if(breakFlag) break;
                         if(type2==type){
@@ -54,6 +54,7 @@ module.exports = {
                             }
                             if(800-link2.store.energy<=link.store.energy*1.3&&link2.store.energy<700){
                                 link.transferEnergy(link2);
+                                console.log(link.id,'->',link2.id);
                                 breakFlag=true;
                                 break;
                             }
