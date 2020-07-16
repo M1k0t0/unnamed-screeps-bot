@@ -117,6 +117,20 @@ module.exports.loop = function () {
             }).length) room.controller.activateSafeMode();
         }
         
+        if(!Memory.rooms[roomName].centerLink){
+            for(let linkID of Memory.rooms[roomName].links.both){
+                let link=Game.getObjectById(linkID);
+                if(link && link.pos.inRangeTo(room.center,1)){
+                    Memory.rooms[roomName].centerLink=linkID;
+                    break;
+                }
+            }
+        }else{
+            if(!Game.getObjectById(Memory.rooms[roomName].centerLink)){
+                Memory.rooms[roomName].centerLink=undefined;
+            }
+        }
+        
         Memory.rooms[roomName].core=[spawn0.pos.x-2,spawn0.pos.y];
         
         if(Memory['rooms'][roomName]['matrixes']==undefined){
@@ -354,6 +368,13 @@ module.exports.loop = function () {
                     Memory.rooms[roomName].links.both.push(link.id);
                     break;
                 }
+            }
+        }
+        
+        if(Memory.rooms[roomName].centerLink && room.energyAvailable<room.energyCapacityAvailable*0.9){
+            let link=Game.getObjectById(Memory.rooms[roomName].centerLink);
+            if(link && link.store.energy<(link.store.getCapacity('energy')*0.5)){
+                newTask(roomName,'storage',Memory.rooms[roomName].centerLink,'energy',800);
             }
         }
         
