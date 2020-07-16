@@ -24,7 +24,7 @@ var Transporter = {
                         if(creep.room.controller && creep.room.controller.level<3){
                             return (r.store.energy>150 || r.store.energy>=creep.store.getFreeCapacity(r.resourceType)) && r.pos.inRangeTo(creep,20);
                         }
-                        return r.store.getUsedCapacity() && r.pos.inRangeTo(new RoomPosition(Memory.rooms[creep.room.name].core[0],Memory.rooms[creep.room.name].core[1],creep.room.name),20);
+                        return (r.store.getUsedCapacity()>300 || r.store.getUsedCapacity()-r.store.getUsedCapacity('energy')>150) && r.pos.inRangeTo(new RoomPosition(Memory.rooms[creep.room.name].core[0],Memory.rooms[creep.room.name].core[1],creep.room.name),20);
                     }
                 });
                 if(tombstone) {
@@ -332,6 +332,20 @@ var Transporter = {
                             }else{
                                 creep.moveTo(ext, {visualizePathStyle: {stroke: '#ffffff'}});
                                 return;
+                            }
+                        }
+                        
+                        if(creep.room.controller && creep.room.controller.level>4){
+                            for(let linkID of Memory.rooms[creep.room.name].links.both){
+                                let link=Game.getObjectById(linkID);
+                                if(!link.pos.inRangeTo(creep.room.center,6)) continue;   // max range 17
+                                if(link && link.store.energy<link.store.getCapacity('energy')){
+                                    let state=creep.transfer(link,RESOURCE_ENERGY);
+                                    if(state == ERR_NOT_IN_RANGE) {
+                                        creep.moveTo(link);
+                                    }
+                                    return;
+                                }
                             }
                         }
                         

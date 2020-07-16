@@ -50,6 +50,7 @@ module.exports = {
                             }
                             if(800-link2.store.energy<=link.store.energy*1.3&&link2.store.energy<700){
                                 link.transferEnergy(link2);
+                                break;
                             }
                         }
                     }
