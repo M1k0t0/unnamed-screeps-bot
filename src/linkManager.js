@@ -38,6 +38,7 @@ module.exports = {
                     console.log('[LinkManager] '+linkID+'已被破坏,正在丢出列表...');
                     continue;
                 }
+                if(link.cooldown) continue;
                 if((type=='out' || type=='both') && link.store.energy>200){
                     // needStorage=false;
                     for(let type2 of input){
@@ -54,7 +55,7 @@ module.exports = {
                             }
                             if(800-link2.store.energy<=link.store.energy*1.3&&link2.store.energy<700){
                                 link.transferEnergy(link2);
-                                console.log(link.id,'->',link2.id);
+                                // console.log(link.id,'->',link2.id,link.transferEnergy(link2));
                                 breakFlag=true;
                                 break;
                             }
