@@ -32,7 +32,7 @@ module.exports.loop = function () {
     
     global.towerTarget = {};
     
-    let rooms_list=['E19N48'];
+    let rooms_list=["YOUR-ROOM-NAME"];
     
     let cpuStartTime=Game.cpu.getUsed();
     
@@ -243,19 +243,20 @@ module.exports.loop = function () {
                         }
                     }
                     for(let i=0;i<limit;i++){
-                        if(s!='road' && room.lookForAt(LOOK_CREEPS,pos_list[i]).length){
-                            jump=true;
-                            continue;
-                        }
+                        // if(s!='road' && room.lookForAt(LOOK_CREEPS,pos_list[i]).length){
+                        //     jump=true;
+                        //     continue;
+                        // }
+                        // 没必要
                         if(s!='spawn'){
                             room.createConstructionSite(pos_list[i],s);
                         }else{
                             if(Game.spawns[roomName+'_Spawn0'] && !Game.spawns[roomName+'_Spawn1']){
-                                room.createConstructionSite(pos_list[i],s,roomName+'_Spawn1');
+                                room.createConstructionSite(pos_list[i].x,pos_list[i].y,s,roomName+'_Spawn1');
                             }else if(Game.spawns[roomName+'_Spawn0'] && !Game.spawns[roomName+'_Spawn2']){
-                                room.createConstructionSite(pos_list[i],s,roomName+'_Spawn2');
+                                room.createConstructionSite(pos_list[i].x,pos_list[i].y,s,roomName+'_Spawn2');
                             }else{
-                                room.createConstructionSite(pos_list[i],s,roomName+'_Spawn0');
+                                room.createConstructionSite(pos_list[i].x,pos_list[i].y,s,roomName+'_Spawn0');
                             }
                         }
                     }
@@ -374,6 +375,7 @@ module.exports.loop = function () {
         if(Memory.rooms[roomName].centerLink && room.energyAvailable<room.energyCapacityAvailable*0.9){
             let link=Game.getObjectById(Memory.rooms[roomName].centerLink);
             if(link && link.store.energy<(link.store.getCapacity('energy')*0.5)){
+                console.log('push task: storage -> centerLink (800 energy)');
                 newTask(roomName,'storage',Memory.rooms[roomName].centerLink,'energy',800);
             }
         }
