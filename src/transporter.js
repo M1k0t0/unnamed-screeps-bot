@@ -84,7 +84,7 @@ var Transporter = {
                 for(let linkID of Memory.rooms[creep.room.name].links.both){
                     //console.log(linkID);
                     let link=Game.getObjectById(linkID);
-                    if(link && link.store.energy){
+                    if(link && link.store.energy && link.cooldown==0){
                         let state=creep.withdraw(link,RESOURCE_ENERGY);
                         if(state == ERR_NOT_IN_RANGE) {
                             creep.moveTo(link);
