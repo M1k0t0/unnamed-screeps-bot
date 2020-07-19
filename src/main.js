@@ -117,7 +117,7 @@ module.exports.loop = function () {
             }).length) room.controller.activateSafeMode();
         }
         
-        if(!Memory.rooms[roomName].centerLink){
+        if(room.controller.level>=6 && Memory.rooms[roomName].links && !Memory.rooms[roomName].centerLink){
             for(let linkID of Memory.rooms[roomName].links.both){
                 let link=Game.getObjectById(linkID);
                 if(link && link.pos.inRangeTo(room.center,1)){
@@ -363,7 +363,7 @@ module.exports.loop = function () {
             if(tower) TowerCtrl.run(tower);
         }
         
-        if(!Memory.rooms[roomName].links.both.length){
+        if(room.controller.level>=6 && Memory.rooms[roomName].links && !Memory.rooms[roomName].links.both.length){
             for(let link of room.link){
                 if(link.pos.x==Memory.rooms[roomName].core[0] && link.pos.y==Memory.rooms[roomName].core[1]+1){
                     Memory.rooms[roomName].links.both.push(link.id);
