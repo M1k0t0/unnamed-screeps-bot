@@ -93,6 +93,40 @@ var roleBuilder = {
                     creep.suicide();
                 }
             }
+            
+            if(creep.room.controller && creep.room.controller.level>4){
+                for(let linkID of Memory.rooms[creep.room.name].links.in){
+                    let link=Game.getObjectById(linkID);
+                    if(!link.pos.inRangeTo(creep.room.center,6)) continue;   // max range 17
+                    if(link && link.store.energy){
+                        let state=creep.withdraw(link,RESOURCE_ENERGY);
+                        if(state == ERR_NOT_IN_RANGE) {
+                            creep.moveTo(link);
+                        }else if(state == OK){
+                            if(creep.store.energy+link.store.energy>=creep.store.getCapacity()*0.8){
+                                creep.memory.Transfer=true;
+                            }
+                        }
+                        return;
+                    }
+                }
+                for(let linkID of Memory.rooms[creep.room.name].links.both){
+                    //console.log(linkID);
+                    let link=Game.getObjectById(linkID);
+                    if(link && link.store.energy && link.store.energy<link.store.getCapacity('energy') && link.cooldown==0){
+                        let state=creep.withdraw(link,RESOURCE_ENERGY);
+                        if(state == ERR_NOT_IN_RANGE) {
+                            creep.moveTo(link);
+                        }else if(state == OK){
+                            if(creep.store.energy+link.store.energy>=creep.store.getCapacity()*0.8){
+                                creep.memory.Transfer=true;
+                            }
+                        }
+                        return;
+                    }
+                }
+            }
+            
             const target = creep.pos.findClosestByRange(FIND_STRUCTURES, {
                 filter: (structure) => {
                     return structure.structureType == STRUCTURE_CONTAINER && structure.store.energy>creep.store.getFreeCapacity('energy');

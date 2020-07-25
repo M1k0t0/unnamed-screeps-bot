@@ -175,6 +175,43 @@ global.spawn_conf={
             return 150;
         }
     },
+    'builder':{
+        'role':'builder',
+        'name':(roomName)=>{ return roomName+'_Builder_'+Game.time; },
+        'limit':(roomName)=>{ 
+            let rcltl=[0,0,4,4,4,3,3,2,1];
+            return rcltl[Game.rooms[roomName].controller.level];
+        },
+        'spawn': (roomName)=>{ 
+            if(Game.rooms[roomName].controller && Game.rooms[roomName].controller.level<3 && !Memory.rooms[roomName]['creep_num']){
+                return false;
+            }
+            return Game.rooms[roomName].energyAvailable>=300 && Game.rooms[roomName].find(FIND_CONSTRUCTION_SITES).length; 
+        },
+        'workpos': null,
+        'body':(roomName)=>{
+            if(Game.rooms[roomName].controller.level<4){
+                return [WORK,MOVE,MOVE,CARRY];
+            }
+            if(Game.rooms[roomName].controller.level<6){
+                return [WORK,WORK,WORK,MOVE,MOVE,MOVE,CARRY,CARRY,CARRY];
+            }
+            if(Game.rooms[roomName].controller.level<=8){
+                return [WORK,WORK,WORK,WORK,MOVE,MOVE,MOVE,CARRY,CARRY];
+            }
+        },
+        'cost':(roomName)=>{
+            if(Game.rooms[roomName].controller.level<4){
+                return 250;
+            }
+            if(Game.rooms[roomName].controller.level<6){
+                return 600;
+            }
+            if(Game.rooms[roomName].controller.level<=8){
+                return 650;
+            }
+        }
+    },
     'upgrader':{
         'role':'upgrader',
         'name':(roomName)=>{ return roomName+'_Upgrader_'+Game.time; },
@@ -189,16 +226,20 @@ global.spawn_conf={
             if(Game.rooms[roomName].controller && Game.rooms[roomName].controller.ticksToDowngrade<CONTROLLER_DOWNGRADE[Game.rooms[roomName].controller.level]/5){
                 return true;
             }
-            if(Game.rooms[roomName].controller && Game.rooms[roomName].controller.level<=3){
-                if(!Memory.rooms[roomName]['creep_num']){
-                    return false;
+            if(Game.rooms[roomName].controller && Game.rooms[roomName].controller.level<8){
+                if(Game.rooms[roomName].controller && Game.rooms[roomName].controller.level<=3){
+                    if(!Memory.rooms[roomName]['creep_num']){
+                        return false;
+                    }
+                    return Game.rooms[roomName].energyAvailable>=300; 
                 }
-                return Game.rooms[roomName].energyAvailable>=300; 
+                if(Game.rooms[roomName].storage){
+                    return Game.rooms[roomName].energyAvailable>=Game.rooms[roomName].energyCapacityAvailable*0.5 && Game.rooms[roomName].storage.store.energy>50000;
+                }
+                return Game.rooms[roomName].energyAvailable>=Game.rooms[roomName].energyCapacityAvailable*0.8;
+            }else{
+                return false;
             }
-            if(Game.rooms[roomName].storage){
-                return Game.rooms[roomName].energyAvailable>=Game.rooms[roomName].energyCapacityAvailable*0.5 && Game.rooms[roomName].storage.store.energy>50000;
-            }
-            return Game.rooms[roomName].energyAvailable>=Game.rooms[roomName].energyCapacityAvailable*0.8;
         },
         'workpos': (roomName)=>{ return Game.rooms[roomName].controller.pos },
         'body':(roomName)=>{
@@ -224,43 +265,6 @@ global.spawn_conf={
                 return 650;
             }
             return 650;
-        }
-    },
-    'builder':{
-        'role':'builder',
-        'name':(roomName)=>{ return roomName+'_Builder_'+Game.time; },
-        'limit':(roomName)=>{ 
-            let rcltl=[0,0,4,4,4,3,3,2,1];
-            return rcltl[Game.rooms[roomName].controller.level];
-        },
-        'spawn': (roomName)=>{ 
-            if(Game.rooms[roomName].controller && Game.rooms[roomName].controller.level<3 && !Memory.rooms[roomName]['creep_num']){
-                return false;
-            }
-            return Game.time%30 && Game.rooms[roomName].energyAvailable>=300 && Game.rooms[roomName].find(FIND_CONSTRUCTION_SITES).length; 
-        },
-        'workpos': null,
-        'body':(roomName)=>{
-            if(Game.rooms[roomName].controller.level<4){
-                return [WORK,MOVE,MOVE,CARRY];
-            }
-            if(Game.rooms[roomName].controller.level<6){
-                return [WORK,WORK,WORK,MOVE,MOVE,MOVE,CARRY,CARRY,CARRY];
-            }
-            if(Game.rooms[roomName].controller.level<=8){
-                return [WORK,WORK,WORK,WORK,MOVE,MOVE,MOVE,CARRY,CARRY];
-            }
-        },
-        'cost':(roomName)=>{
-            if(Game.rooms[roomName].controller.level<4){
-                return 250;
-            }
-            if(Game.rooms[roomName].controller.level<6){
-                return 600;
-            }
-            if(Game.rooms[roomName].controller.level<=8){
-                return 650;
-            }
         }
     }
 }
@@ -364,6 +368,9 @@ global.placeByList = function(r,l,t){
 global.newTask = function(roomName,from,to,resourceType,amount,ns=false){
     if(!roomName){
         return undefined;
+    }
+    if(!Memory.tasks[roomName]){
+        Memory.tasks[roomName]=[[],{}];
     }
     if(from=='storage'){
         from=Game.rooms[roomName].storage.id;
