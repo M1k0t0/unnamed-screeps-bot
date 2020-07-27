@@ -374,7 +374,7 @@ module.exports.loop = function () {
             }
             if(room.controller.level>=6 && Memory.rooms[roomName].links && Memory.rooms[roomName].links.in.length<2){
                 for(let link of room.link){
-                    if(link.pos.x==Memory.rooms[roomName].core[0] && (link.pos.y==Memory.rooms[roomName].core[1]+6 || link.pos.y==Memory.rooms[roomName].core[1]+6)){
+                    if(link.pos.x==Memory.rooms[roomName].core[0] && (link.pos.y==Memory.rooms[roomName].core[1]+6 || link.pos.y==Memory.rooms[roomName].core[1]-6)){
                         if(Memory.rooms[roomName].links.in.indexOf(link.id)==-1){
                             Memory.rooms[roomName].links.in.push(link.id);
                             break;
