@@ -30,7 +30,9 @@
 
 //-----a sample of whiteList------------
 let whiteList = new Set([
-    'fangxm'
+    'fangxm',
+    'WheatEars',
+    'Aurium'
 ])
 
 function getWhitelist() {

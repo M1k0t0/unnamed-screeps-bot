@@ -19,8 +19,11 @@ function flagRun(flag){
         if(spawn){
             //这里的body如不满意可以自行调整
             var body = [MOVE,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY];
+            if(flag.room.controller.level>=6){
+                body = [MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY];
+            }
             if(flag.room.controller.level==8){
-                body = [MOVE,MOVE,MOVE,MOVE,MOVE,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY];
+                body = [MOVE,MOVE,MOVE,MOVE,MOVE,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE,MOVE,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY];
             }
 
             spawn.spawnCreep(body,flag.pos.roomName+'_centerTransfer',{memory:{dontheal:true}})
@@ -65,12 +68,13 @@ function centerCreep (creep,flag){
     //读取flag里面存的资源，不合法再找
     
     const tasks=Memory.tasks[creep.pos.roomName];
+    // console.log(Object.values(tasks[0]));
     if(tasks==undefined){
         Memory.tasks[creep.pos.roomName]=[[],{}];
     }else if(tasks[0].length){
         let task=tasks[1][tasks[0][0]];
         if(!task){
-            creep.say(tasks[0][0]);
+            // creep.say(tasks[0][0]);
             return;
         }
         let id=task.id;
