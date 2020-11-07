@@ -228,7 +228,7 @@ function getAvaliableSpawn(roomName){
     if(!Game.rooms[roomName]){
         return null;
     }
-    for (let spawn of Game.rooms[roomName].spawns){
+    for (let spawn of Game.rooms[roomName].spawn){
         if(spawn.spawning == null){
             return spawn
         }
